@@ -2,19 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\Doctor;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DatabaseSeeder extends Seeder
+class DoctorSeeder extends Seeder
 {
     public function run(): void
     {
         DB::transaction(function () {
-            $this->call([
-                UserSeeder::class,
-                PatientSeeder::class,
-                DoctorSeeder::class,
-            ]);
+            Doctor::factory(20)->create();
         });
     }
 }
