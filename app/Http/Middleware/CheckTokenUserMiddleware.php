@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\ResponseHelper;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\ResponseTrait;
@@ -23,12 +24,12 @@ class CheckTokenUserMiddleware
         try{
             $user = Auth::guard('user-api')->user();
         }catch (TokenInvalidException $ex){
-            return response()->json(['message' => 'Invalid token'], 401);
+            return ResponseHelper::jsonResponse([],'Invalid token',401,false);
         }catch (TokenExpiredException $ex){
-            return response()->json(['message' => 'Expired token'], 401);
+            return ResponseHelper::jsonResponse([],'Expired token',401,false);
         }
         if(!$user){
-            return response()->json(['message' => 'Unauthenticated'], 401);
+            return ResponseHelper::jsonResponse([],'Unauthenticated',401,false);
         }
         return $next($request);
     }

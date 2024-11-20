@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Helpers\ResponseHelper;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Notifications\EmailVerificationNotification;
 use App\Traits\ImageProcessing;
@@ -33,24 +35,33 @@ class UserService{
 
         $new_user->notify(new EmailVerificationNotification());
 
-        return $new_user;
+        $data =[
+            'new_user' => UserResource::make($new_user),
+            'token' => $token,
+        ];
+        return ResponseHelper::jsonResponse(
+            $data,
+            'User registered successfully! ,check your email for verification code',
+            201);
     }
 
     public function emailVerify(Request $request)
     {
         $otp2= $this->otp->validate($request->email, $request->otp);
         if(!$otp2->status){
-            return false;
+            return ResponseHelper::jsonResponse([],'Email not verified',400,false);
         }
         User::where('email', $request['email'])
             ->update(['email_verified_at' => now()]);
-        return true;
+        return ResponseHelper::jsonResponse([], 'Email Verified successfully!');
     }
 
     public function resendOtp()
     {
         $user= Auth::guard('user-api')->user();
         $user->notify(new EmailVerificationNotification());
+
+        return ResponseHelper::jsonResponse([], 'Resent otp successfully! ,check your email');
     }
 
     public function login(Request $request)
@@ -58,23 +69,34 @@ class UserService{
         $credentials = $request->only('email', 'password');
         $token= Auth::guard('user-api')->attempt($credentials);
         if(!$token){
-            return null;
+            return ResponseHelper::jsonResponse([],'User not found',400,false);
         }
         $user= Auth::guard('user-api')->user();
-        $user->token = $token;
 
-        return $user;
+        $data=[
+            'user' => UserResource::make($user),
+            'token' => $token
+        ];
+        return ResponseHelper::jsonResponse($data, 'Logged in successfully!');
     }
 
     public function logout(Request $request)
     {
         $token= $request->header('Authorization');
         Auth::guard('user-api')->invalidate($token);
+
+        return ResponseHelper::jsonResponse([], 'Logged out successfully!');
     }
 
     public function getProfile()
     {
         $user= Auth::guard('user-api')->user();
-        return $user;
+        if(!$user){
+            return ResponseHelper::jsonResponse([], 'User not found',400,false);
+        }
+        $data=[
+            'profile'=>UserResource::make($user)
+        ];
+        return ResponseHelper::jsonResponse($data,'Get profile successfully!');
     }
 }
