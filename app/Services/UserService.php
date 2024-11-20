@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Notifications\EmailVerificationNotification;
+use App\Notifications\ResetPasswordNotification;
 use App\Traits\ImageProcessing;
 use Illuminate\Http\Request;
 use Ichtrojan\Otp\Otp;
@@ -56,7 +58,7 @@ class UserService{
         return ResponseHelper::jsonResponse([], 'Email Verified successfully!');
     }
 
-    public function resendOtp()
+    public function resendVerificationCode()
     {
         $user= Auth::guard('user-api')->user();
         $user->notify(new EmailVerificationNotification());
@@ -80,6 +82,33 @@ class UserService{
         return ResponseHelper::jsonResponse($data, 'Logged in successfully!');
     }
 
+    public function forgetPassword(Request $request)
+    {
+        $email= $request->email;
+        $user= User::where('email', $email)->first();
+        if(!$user){
+            return ResponseHelper::jsonResponse([],'User not found',400,false);
+        }
+        $user->notify(new ResetPasswordNotification());
+        return ResponseHelper::jsonResponse([], 'Check your email for reset password!');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $data =$request->all();
+
+        $otp2 = $this->otp->validate($data['email'], $data['otp']);
+        if(!$otp2->status){
+            return ResponseHelper::jsonResponse([], 'Invalid otp', 400,false);
+        }
+
+        $data['password'] = Hash::make($data['password']);
+        User::where('email',$data['email'])
+            ->update(['password' => $data['password']]);
+
+        return ResponseHelper::jsonResponse([], 'Password reset successfully!');
+    }
+
     public function logout(Request $request)
     {
         $token= $request->header('Authorization');
@@ -98,5 +127,33 @@ class UserService{
             'profile'=>UserResource::make($user)
         ];
         return ResponseHelper::jsonResponse($data,'Get profile successfully!');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $inputs= $request->all();
+        $user= Auth::guard('user-api')->user();
+
+        if($request->hasFile('image')){
+            if($user->image)
+                $this->delete_image($user->image);
+            $inputs['image'] = $this->saveImage($request->file('image'));
+        }
+
+        $updated_user= $user->update($inputs);
+
+        $data=[
+            'updated_user'=>UserResource::make($updated_user)
+        ];
+
+        return ResponseHelper::jsonResponse($data, 'Update successfully!');
+    }
+
+    public function deleteAccount()
+    {
+        $user= Auth::guard('user-api')->user();
+        User::destroy($user);
+
+        return ResponseHelper::jsonResponse([], 'Account deleted successfully!');
     }
 }

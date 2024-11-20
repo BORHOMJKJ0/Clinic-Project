@@ -27,11 +27,17 @@ Route::prefix('doctors')->controller(DoctorController::class)->group(function ()
 Route::prefix('users')->group(function () {
     Route::post('/register', [UserController::class, 'register']);
     Route::post('/login', [UserController::class, 'login']);
+    Route::post('/forget',[UserController::class,'forgetPassword']);
+    Route::post('/resetPassword',[UserController::class,'resetPassword']);
 
     Route::group(['middleware' => ['check_user_token:user-api']], function () {
         Route::post('/verify', [UserController::class, 'emailVerify']);
-        Route::get('/resendOtp', [UserController::class, 'resendOtp']);
-        Route::post('/logout', [UserController::class, 'logout']);
-        Route::get('/profile', [UserController::class, 'getProfile']);
+        Route::get('/resendVerificationCode', [UserController::class, 'resendVerificationCode']);
+        Route::group(['middleware' => ['check_verification']], function () {
+            Route::post('/logout', [UserController::class, 'logout']);
+            Route::get('/getProfile', [UserController::class, 'getProfile']);
+            Route::post('/updateProfile', [UserController::class, 'updateProfile']);
+            Route::delete('/deleteAccount', [UserController::class, 'deleteAccount']);
+        });
     });
 });

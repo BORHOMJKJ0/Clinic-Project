@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -56,5 +57,12 @@ trait ImageProcessing
         $image->save($save_path.'/'.$image_path);
 
         return url('images/'.$image_path);
+    }
+
+    public function delete_image($file_path)
+    {
+        if ($file_path && Storage::disk('public')->exists('images/' . $file_path)) {
+            Storage::disk('public')->delete('images/' . $file_path);
+        }
     }
 }

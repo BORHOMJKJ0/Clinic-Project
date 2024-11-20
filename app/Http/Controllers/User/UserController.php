@@ -28,14 +28,24 @@ class UserController extends Controller
         return $this->userService->emailVerify($request);
     }
 
-    public function resendOtp()
+    public function resendVerificationCode()
     {
-        return $this->userService->resendOtp();
+        return $this->userService->resendVerificationCode();
     }
 
     public function login(Request $request)
     {
        return $this->userService->login($request);
+    }
+
+    public function forgetPassword(Request $request)
+    {
+        return $this->userService->forgetPassword($request);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        return $this->userService->resetPassword($request);
     }
 
     public function logout(Request $request)
@@ -46,5 +56,15 @@ class UserController extends Controller
     public function getProfile()
     {
         return $this->userService->getProfile();
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $this->userService->updateProfile($request);
+    }
+
+    public function deleteAccount()
+    {
+        $this->userService->deleteAccount();
     }
 }
