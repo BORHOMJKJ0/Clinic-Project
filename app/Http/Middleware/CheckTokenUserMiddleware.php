@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 class CheckTokenUserMiddleware
 {
     use ResponseTrait;
+
     /**
      * Handle an incoming request.
      *
@@ -21,16 +22,17 @@ class CheckTokenUserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        try{
+        try {
             $user = Auth::guard('user-api')->user();
-        }catch (TokenInvalidException $ex){
-            return ResponseHelper::jsonResponse([],'Invalid token',401,false);
-        }catch (TokenExpiredException $ex){
-            return ResponseHelper::jsonResponse([],'Expired token',401,false);
+        } catch (TokenInvalidException $ex) {
+            return ResponseHelper::jsonResponse([], 'Invalid token', 401, false);
+        } catch (TokenExpiredException $ex) {
+            return ResponseHelper::jsonResponse([], 'Expired token', 401, false);
         }
-        if(!$user){
-            return ResponseHelper::jsonResponse([],'Unauthenticated',401,false);
+        if (! $user) {
+            return ResponseHelper::jsonResponse([], 'Unauthenticated', 401, false);
         }
+
         return $next($request);
     }
 }

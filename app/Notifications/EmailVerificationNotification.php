@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use Ichtrojan\Otp\Otp;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -13,9 +12,13 @@ class EmailVerificationNotification extends Notification
     use Queueable;
 
     public $message;
+
     public $subject;
+
     public $fromEmail;
+
     public $mailer;
+
     private $otp;
 
     /**
@@ -23,11 +26,11 @@ class EmailVerificationNotification extends Notification
      */
     public function __construct()
     {
-        $this->message='Use this code for verify your email';
-        $this->subject='Verify email';
-        $this->fromEmail=env('MAIL_FROM_ADDRESS');
-        $this->mailer=env('MAIL_MAILER');
-        $this->otp= new Otp();
+        $this->message = 'Use this code for verify your email';
+        $this->subject = 'Verify email';
+        $this->fromEmail = env('MAIL_FROM_ADDRESS');
+        $this->mailer = env('MAIL_MAILER');
+        $this->otp = new Otp;
     }
 
     /**
@@ -45,7 +48,8 @@ class EmailVerificationNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $otp= $this->otp->generate($notifiable->email, 'numeric', 6, 5);
+        $otp = $this->otp->generate($notifiable->email, 'numeric', 6, 5);
+
         return (new MailMessage)
             ->mailer($this->mailer)
             ->subject($this->subject)

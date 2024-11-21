@@ -39,20 +39,21 @@ trait ImageProcessing
                 $ext = '';
                 break;
         }
+
         return $ext;
     }
 
     public function saveImage($file)
     {
-        $image= Image::make($file);
+        $image = Image::make($file);
 
         $ext = $this->get_mime($image->mime());
-        $random_str= Str::random(8);
-        $image_path= $random_str.time().$ext;
+        $random_str = Str::random(8);
+        $image_path = $random_str.time().$ext;
 
-        $save_path= public_path('images');
-        if (!file_exists($save_path)) {
-            mkdir($save_path,0777,true);
+        $save_path = public_path('images');
+        if (! file_exists($save_path)) {
+            mkdir($save_path, 0777, true);
         }
         $image->save($save_path.'/'.$image_path);
 
@@ -61,8 +62,8 @@ trait ImageProcessing
 
     public function delete_image($file_path)
     {
-        if ($file_path && Storage::disk('public')->exists('images/' . $file_path)) {
-            Storage::disk('public')->delete('images/' . $file_path);
+        if ($file_path && Storage::disk('public')->exists('images/'.$file_path)) {
+            Storage::disk('public')->delete('images/'.$file_path);
         }
     }
 }

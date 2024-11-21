@@ -59,7 +59,7 @@ class PatientService
 
     public function getPatientsOrderedBy($column, $direction, Request $request)
     {
-        $validColumns = ['age', 'first_name', 'last_name', 'phone', 'created_at', 'updated_at'];
+        $validColumns = ['age', 'created_at', 'updated_at'];
         $validDirections = ['asc', 'desc'];
 
         if (! in_array($column, $validColumns) || ! in_array($direction, $validDirections)) {
@@ -84,7 +84,7 @@ class PatientService
     {
         try {
             $this->validatePatientData($data, 'sometimes');
-            //$this->checkOwnership($patient, 'Patient', 'update');
+            $this->checkOwnership($patient, 'Patient', 'update');
             $patient = $this->patientRepository->update($patient, $data);
             $data = ['Patient' => PatientResource::make($patient)];
             $response = ResponseHelper::jsonResponse($data, 'Patient updated successfully!');
@@ -99,7 +99,7 @@ class PatientService
     {
 
         try {
-            // $this->checkOwnership($patient, 'Patient', 'delete');
+            $this->checkOwnership($patient, 'Patient', 'delete');
             $this->patientRepository->delete($patient);
             $response = ResponseHelper::jsonResponse([], 'Patient deleted successfully!');
         } catch (HttpResponseException $e) {
@@ -113,7 +113,6 @@ class PatientService
     {
         $validator = Validator::make($data, [
             'age' => "$rule",
-            'user_id' => "$rule|exists:users,id",
         ]);
 
         if ($validator->fails()) {

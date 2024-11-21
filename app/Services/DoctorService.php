@@ -59,7 +59,7 @@ class DoctorService
 
     public function getDoctorsOrderedBy($column, $direction, Request $request)
     {
-        $validColumns = ['specialization', 'first_name', 'last_name', 'phone', 'created_at', 'updated_at'];
+        $validColumns = ['specialization', 'created_at', 'updated_at'];
         $validDirections = ['asc', 'desc'];
 
         if (! in_array($column, $validColumns) || ! in_array($direction, $validDirections)) {
@@ -84,7 +84,7 @@ class DoctorService
     {
         try {
             $this->validateDoctorData($data, 'sometimes');
-            //$this->checkOwnership($doctor, 'Doctor', 'update');
+            $this->checkOwnership($doctor, 'Doctor', 'update');
             $doctor = $this->doctorRepository->update($doctor, $data);
             $data = ['Doctor' => DoctorResource::make($doctor)];
             $response = ResponseHelper::jsonResponse($data, 'Doctor updated successfully!');
@@ -99,7 +99,7 @@ class DoctorService
     {
 
         try {
-            // $this->checkOwnership($doctor, 'Doctor', 'delete');
+            $this->checkOwnership($doctor, 'Doctor', 'delete');
             $this->doctorRepository->delete($doctor);
             $response = ResponseHelper::jsonResponse([], 'Doctor deleted successfully!');
         } catch (HttpResponseException $e) {
@@ -113,7 +113,6 @@ class DoctorService
     {
         $validator = Validator::make($data, [
             'specialization' => "$rule",
-            'user_id' => "$rule|exists:users,id",
         ]);
 
         if ($validator->fails()) {

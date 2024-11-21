@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Helpers\ResponseHelper;
-use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +17,11 @@ class checkVerificationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user= Auth::guard('user-api')->user();
-        if(!$user->email_verified_at){
+        $user = Auth::guard('user-api')->user();
+        if (! $user->email_verified_at) {
             return ResponseHelper::jsonResponse([], 'Unauthorized', 403, false);
         }
+
         return $next($request);
     }
 }

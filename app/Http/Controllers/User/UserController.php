@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
-
 
 class UserController extends Controller
 {
@@ -35,7 +32,7 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-       return $this->userService->login($request);
+        return $this->userService->login($request);
     }
 
     public function forgetPassword(Request $request)
