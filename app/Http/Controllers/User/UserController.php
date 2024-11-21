@@ -60,11 +60,11 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $this->userService->updateProfile($request);
+        return $this->userService->updateProfile($request);
     }
 
     public function deleteAccount()
     {
-        $this->userService->deleteAccount();
+        return $this->userService->deleteAccount();
     }
 }

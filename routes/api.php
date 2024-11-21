@@ -32,7 +32,7 @@ Route::prefix('users')->group(function () {
 
     Route::group(['middleware' => ['check_user_token:user-api']], function () {
         Route::post('/verify', [UserController::class, 'emailVerify']);
-        Route::get('/resendVerificationCode', [UserController::class, 'resendVerificationCode']);
+        Route::post('/resendVerificationCode', [UserController::class, 'resendVerificationCode']);
         Route::group(['middleware' => ['check_verification']], function () {
             Route::post('/logout', [UserController::class, 'logout']);
             Route::get('/getProfile', [UserController::class, 'getProfile']);

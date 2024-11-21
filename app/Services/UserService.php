@@ -140,10 +140,10 @@ class UserService{
             $inputs['image'] = $this->saveImage($request->file('image'));
         }
 
-        $updated_user= $user->update($inputs);
+        $user->update($inputs);
 
         $data=[
-            'updated_user'=>UserResource::make($updated_user)
+            'updated_user'=>UserResource::make($user)
         ];
 
         return ResponseHelper::jsonResponse($data, 'Update successfully!');
