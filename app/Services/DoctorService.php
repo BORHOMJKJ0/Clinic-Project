@@ -59,7 +59,7 @@ class DoctorService
 
     public function getDoctorsOrderedBy($column, $direction, Request $request)
     {
-        $validColumns = ['specialization', 'created_at', 'updated_at'];
+        $validColumns = ['first_name', 'last_name', 'phone', 'specialization', 'created_at', 'updated_at'];
         $validDirections = ['asc', 'desc'];
 
         if (! in_array($column, $validColumns) || ! in_array($direction, $validDirections)) {

@@ -2,17 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\Models\Appointment;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DatabaseSeeder extends Seeder
+class AppointmentSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         DB::transaction(function () {
-            $this->call([
-                DailyAppointmentSeeder::class,
-            ]);
+            Appointment::factory(5)->create();
         });
     }
 }

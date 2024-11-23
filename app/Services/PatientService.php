@@ -59,7 +59,7 @@ class PatientService
 
     public function getPatientsOrderedBy($column, $direction, Request $request)
     {
-        $validColumns = ['age', 'created_at', 'updated_at'];
+        $validColumns = ['first_name', 'last_name', 'phone', 'age', 'created_at', 'updated_at'];
         $validDirections = ['asc', 'desc'];
 
         if (! in_array($column, $validColumns) || ! in_array($direction, $validDirections)) {

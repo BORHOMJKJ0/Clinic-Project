@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Doctor\DoctorController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\User\UserController;
@@ -18,10 +19,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('api')->group(function () {
     Route::apiResource('patients', PatientController::class);
     Route::apiResource('doctors', DoctorController::class);
+    Route::apiResource('appointments', AppointmentController::class);
     Route::prefix('patients')->controller(PatientController::class)->group(function () {
         Route::get('/order/{column}/{direction}', 'OrderBy');
     });
     Route::prefix('doctors')->controller(DoctorController::class)->group(function () {
+        Route::get('/order/{column}/{direction}', 'OrderBy');
+    });
+    Route::prefix('appointments')->controller(AppointmentController::class)->group(function () {
         Route::get('/order/{column}/{direction}', 'OrderBy');
     });
 });

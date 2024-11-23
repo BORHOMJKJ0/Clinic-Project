@@ -33,6 +33,8 @@ class Handler extends ExceptionHandler
                     return ResponseHelper::jsonResponse([], 'Doctor Not Found', 404, false);
                 case 'App\Models\Patient':
                     return ResponseHelper::jsonResponse([], 'Patient Not Found', 404, false);
+                case 'App\Models\Appointment':
+                    return ResponseHelper::jsonResponse([], 'Appointment Not Found', 404, false);
                 default:
                     return ResponseHelper::jsonResponse([], 'Resource not found', 404, false);
             }
