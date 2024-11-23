@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::middleware('user-api')->group(function () {
+Route::middleware('api')->group(function () {
     Route::apiResource('patients', PatientController::class);
     Route::apiResource('doctors', DoctorController::class);
     Route::prefix('patients')->controller(PatientController::class)->group(function () {
@@ -33,7 +33,7 @@ Route::prefix('users')->group(function () {
 
     Route::group(['middleware' => ['check_user_token:user-api']], function () {
         Route::post('/verify', [UserController::class, 'emailVerify']);
-        Route::get('/resendVerificationCode', [UserController::class, 'resendVerificationCode']);
+        Route::post('/resendVerificationCode', [UserController::class, 'resendVerificationCode']);
         Route::group(['middleware' => ['check_verification']], function () {
             Route::post('/logout', [UserController::class, 'logout']);
             Route::get('/getProfile', [UserController::class, 'getProfile']);

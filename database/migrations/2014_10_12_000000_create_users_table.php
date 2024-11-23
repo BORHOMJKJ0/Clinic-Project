@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('image')->nullable();
             $table->string('phone');
-            $table->string('role');
+            $table->enum('role', ['doctor', 'patient']);
             $table->rememberToken();
             $table->timestamps();
         });

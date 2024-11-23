@@ -14,7 +14,7 @@ class PatientController extends Controller
 
     public function __construct(PatientService $patientService)
     {
-        $this->middleware('auth:user-api');
+        $this->middleware('auth:api');
         $this->patientService = $patientService;
     }
 

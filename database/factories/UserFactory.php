@@ -19,7 +19,7 @@ class UserFactory extends Factory
             'password' => bcrypt('password'),
             'image' => $this->faker->imageUrl(200, 200),
             'phone' => fake()->unique()->phoneNumber,
-            'role' => fake()->word(),
+            'role' => 'patient',
             'remember_token' => Str::random(10),
         ];
     }
